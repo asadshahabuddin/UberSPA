@@ -1,0 +1,20 @@
+/*
+    Author : Asad Shahabuddin
+    File   : app.css
+    Details: CSS for application - Uber SPA.
+    Email  : shahabuddin.a@husky.neu.edu
+*/
+
+.asBody
+{
+    font-family: Arial;
+    margin: 0px 50px;
+    max-width: 100%;
+}
+
+.asH1
+{
+    color: #5D5D5D;
+    font-weight: normal;
+}
+/* End of app.css */
