@@ -5,16 +5,108 @@
     Email  : shahabuddin.a@husky.neu.edu
 */
 
+html, .asBody, .asContainerDiv, .asMapDiv
+{
+    height: 100%;
+    margin: 0px;
+    padding: 0px
+}
+
 .asBody
 {
     font-family: Arial;
-    margin: 0px 50px;
     max-width: 100%;
 }
 
+/* Division : BEGIN */
+.asFooterDiv
+{
+    background-color: #E6E6E6;
+    border-top: 1px solid #ccc;
+    clear: both;
+    font-size: 13px;
+    padding-bottom: 20px;
+    padding-left: 150px;
+    padding-right: 150px;
+    padding-top: 20px;
+}
+
+.asTitleDiv
+{
+    background-color: #E6E6E6;
+    border-bottom: 1px solid #ccc;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    width: 100%;
+}
+/* Division : END */
+
+/* Element : BEGIN */
 .asH1
 {
     color: #5D5D5D;
     font-weight: normal;
 }
+
+.asHr
+{
+    border: 0;
+    border-top: 1px solid #E6E6E6;
+    clear: both;
+    display: block;
+    height: 1px;
+    margin: 1em 0;
+    padding: 0;
+}
+
+.asMapInput
+{
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    font-family: Arial;
+    font-size: 15px;
+    height: 32px;
+    margin-left: 12px;
+    margin-top: 16px;
+    outline: none;
+    padding: 0 11px 0 13px;
+    text-overflow: ellipsis;
+    width: 400px;
+}
+
+.asMapInput:focus
+{
+    border-color: #4d90fe;
+}
+/* Element : END */
+
+/* Link : BEGIN */
+.asBannerA
+{
+    color: #5D5D5D;
+    font-weight: bold;
+    margin-left: 2em;
+}
+/* Link : END */
+
+/* Span : BEGIN */
+.asBoldSpan
+{
+    font-weight: bold;
+}
+
+.asFooterSpan1
+{
+    color: #A4A4A4;
+}
+
+.asFooterSpan2
+{
+    color: #6E6E6E;
+}
+/* Span : END */
 /* End of app.css */
