@@ -202,14 +202,8 @@ app.controller("UberSPController", function($q, $scope, $http)
     /* UBER FUNCTIONS : BEGIN */
     /* ====================== */
 
-    /* Create variables to store latitude and longitude */
-    /*
-    var userLatitude  = originLat,
-        userLongitude = originLong,
-        destLatitude  = 42.3508452,
-        destLongitude = -71.1481954;
-    */
-
+    /* Query Uber to retrieve pricing options */
+    $scope.uberPrices = [];
     function queryUber(orgnLat, orgnLng, destLat, destLng)
     {
         $.ajax(
@@ -217,7 +211,7 @@ app.controller("UberSPController", function($q, $scope, $http)
             url: "https://api.uber.com/v1/estimates/price",
             headers:
             {
-                Authorization: "Token "  + uberServerToken
+                Authorization: "Token " + uberServerToken
             },
             data:
             {
@@ -228,7 +222,12 @@ app.controller("UberSPController", function($q, $scope, $http)
             },
             success: function(res)
             {
-                console.log(res);
+                console.log("%cUber prices>",
+                            "font-family: Courier New; font-weight: bold;");
+                console.log(res.prices);
+                /* Update the AngularJS scope variable and apply the scope */
+                $scope.uberPrices = res.prices;
+                $scope.$apply();
             }
         });
     };
@@ -240,6 +239,11 @@ app.controller("UberSPController", function($q, $scope, $http)
     $scope.findUber = function()
     {
         queryUber(orgnCoords.latitude, orgnCoords.longitude, destCoords.A, destCoords.F);
+    };
+
+    $scope.formatCarType = function(carType)
+    {
+        return carType.charAt(0).toUpperCase() + carType.slice(1);
     };
 
     /* Main */

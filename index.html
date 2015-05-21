@@ -36,8 +36,6 @@
             <input class="asMapInput" id="pac-input" type="text" placeholder="Search map"/>
             <div class="asMapDiv" id="map-canvas"></div>
 
-            <hr class="asHr"/>
-
             <div class="asUberDiv">
                 <h2 class="asH2">Cars</h2>
                 <form>
@@ -48,6 +46,18 @@
                     <!-- button ng-click="originAddr()" class="asButton">Find me</button -->
                     <button ng-click="findUber()" class="asButton">Query Uber</button><br/>
                 </form>
+
+                <hr ng-show="uberPrices.length > 0" class="asHr"/>
+
+                <div ng-show="uberPrices.length > 0">
+                    <h2 class="asH2">Options</h2>
+                    <p ng-repeat="uberPrice in uberPrices">
+                        <span class="asCarTypeSpan">{{formatCarType(uberPrice.display_name)}}</span><br/>
+                        <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{uberPrice.distance}}</span><br/>
+                        <span class="asCarAttrSpan">Duration: </span><span class="asCarValueSpan">{{uberPrice.duration}}</span><br/>
+                        <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{uberPrice.estimate}}</span><br/>  
+                    </p>
+                </div>
             </div>
 
             <!-- Footer -->

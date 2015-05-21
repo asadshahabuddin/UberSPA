@@ -74,6 +74,11 @@ html, .asBody, .asContainerDiv, .asMapDiv
     margin-left: 5%;
     text-align: left;
 }
+
+.asUberOptionDiv
+{
+    margin-bottom: 25px;
+}
 /* Division : END */
 
 /* Element : BEGIN */
@@ -143,6 +148,26 @@ html, .asBody, .asContainerDiv, .asMapDiv
 /* Link : END */
 
 /* Span : BEGIN */
+.asCarAttrSpan
+{
+    color: #585858;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.asCarTypeSpan
+{
+    color: #2E2E2E;
+    font-size: 17px;
+    font-weight: normal;
+}
+
+.asCarValueSpan
+{
+    color: #585858;
+    font-size: 13px;
+}
+
 .asLabelSpan
 {
     font-size: 15px;
