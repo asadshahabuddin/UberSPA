@@ -7,9 +7,9 @@
 
 html, .asBody, .asContainerDiv, .asMapDiv
 {
-    height: 100%;
+    height: 98%;
     margin: 0px;
-    padding: 0px
+    padding: 0px;
 }
 
 .asBody
@@ -17,6 +17,30 @@ html, .asBody, .asContainerDiv, .asMapDiv
     font-family: Arial;
     max-width: 100%;
 }
+
+/* Button : BEGIN */
+.asButton
+{
+    background-color: #F2F2F2;
+    border: 1px solid #D8D8D8;
+    color: #585858;
+    font-size: 14px;
+    font-weight: normal;
+    margin-bottom: 15px;
+    margin-right: 20px;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+}
+
+.asButton:hover
+{
+    border: 1px solid #BDBDBD;
+    color: black;
+}
+/* Button : BEGIN */
 
 /* Division : BEGIN */
 .asFooterDiv
@@ -31,6 +55,11 @@ html, .asBody, .asContainerDiv, .asMapDiv
     padding-top: 20px;
 }
 
+.asMapDiv
+{
+    width: 100%;
+}
+
 .asTitleDiv
 {
     background-color: #E6E6E6;
@@ -39,12 +68,23 @@ html, .asBody, .asContainerDiv, .asMapDiv
     padding-bottom: 15px;
     width: 100%;
 }
+
+.asUberDiv
+{
+    margin-left: 5%;
+    text-align: left;
+}
 /* Division : END */
 
 /* Element : BEGIN */
 .asH1
 {
     color: #5D5D5D;
+    font-weight: normal;
+}
+
+.asH2
+{
     font-weight: normal;
 }
 
@@ -57,6 +97,15 @@ html, .asBody, .asContainerDiv, .asMapDiv
     height: 1px;
     margin: 1em 0;
     padding: 0;
+}
+
+.asInputField
+{
+    font-size: 15px;
+    line-height: 150%;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    width: 300px;
 }
 
 .asMapInput
@@ -94,6 +143,14 @@ html, .asBody, .asContainerDiv, .asMapDiv
 /* Link : END */
 
 /* Span : BEGIN */
+.asLabelSpan
+{
+    font-size: 15px;
+    display: inline-block;
+    text-align: right;
+    width: 50px;
+}
+
 .asBoldSpan
 {
     font-weight: bold;

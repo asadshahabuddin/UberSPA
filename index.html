@@ -11,7 +11,7 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Uber SPA</title>
-        <link rel="icon" href="image/icon2.png"/>
+        <link rel="icon" href="image/icon3.png"/>
 
         <!-- Style sheets -->
         <link rel="stylesheet" href="css/app.css"/>
@@ -35,6 +35,20 @@
             </div>
             <input class="asMapInput" id="pac-input" type="text" placeholder="Search map"/>
             <div class="asMapDiv" id="map-canvas"></div>
+
+            <hr class="asHr"/>
+
+            <div class="asUberDiv">
+                <h2 class="asH2">Cars</h2>
+                <form>
+                    <!-- span class="asLabelSpan">From&nbsp;</span -->
+                    <input ng-model="orgnAddr" class="asInputField" id="orgn-addr" type="text" placeholder="Origin address"/><br/>
+                    <!-- span class="asLabelSpan">To&nbsp;</span -->
+                    <input ng-model="destAddr" class="asInputField" id="dest-addr" type="text" placeholder="Destination address"/><br/>
+                    <!-- button ng-click="originAddr()" class="asButton">Find me</button -->
+                    <button ng-click="findUber()" class="asButton">Query Uber</button><br/>
+                </form>
+            </div>
 
             <!-- Footer -->
             <div class="asFooterDiv">
