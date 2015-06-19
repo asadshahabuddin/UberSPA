@@ -9,16 +9,20 @@ var app = angular.module("UberSPApp", []);
 console.log("%c>Uber Surge Pricing application",
             "color: navy; font-family: Courier New; font-weight: bold");
 
-app.controller("UberSPController", function($q, $scope, $http)
+app.controller("UberSPController", function($scope, GlobalService, $q)
 {
-    /* Google Maps constants */
+    console.log("%c   [echo] Inside the main controller",
+                "font-family: Courier New;");
+
+    /* Constants */
+    RADIUS = 0.003;
+    var uberClientId    = "EVYAt6HcmlxXyvp3m7FX4k5claG6Bqa",
+        uberServerToken = "i62YyuNa-budKDytw1Le6HTQzt-p17kwG8ub0B72";
+
     var map;
     var orgnLatLng;
     var orgnCoords;
     var destCoords;
-    /* Uber API Constants */
-    var uberClientId    = "EVYAt6HcmlxXyvp3m7FX4k5claG6Bqa",
-        uberServerToken = "i62YyuNa-budKDytw1Le6HTQzt-p17kwG8ub0B72";
 
     /* ============================= */
     /* GOOGLE MAPS FUNCTIONS : BEGIN */
@@ -27,18 +31,20 @@ app.controller("UberSPController", function($q, $scope, $http)
     /* Initialize Google Maps */
     function initGoogleMaps()
     {
+        console.log("%c   [echo] Setting up Google Maps",
+                    "font-family: Courier New;");
         var markers = [];
         var mapOptions = {
             mapTypeControl          : true,
             mapTypeControlOptions   : {
                 style   : google.maps.MapTypeControlStyle.HORIZONTAL_BAR
             },
-            mapTypeId               : google.maps.MapTypeId.ROADMAP,
+            mapTypeId               : google.maps.MapTypeId.TERRAIN,
             streetViewControl       : true,
             streetViewControlOptions: {
                 position: google.maps.ControlPosition.LEFT_CENTER
             },
-            zoom                    : 15,
+            zoom                    : 11,
             zoomControl             : true,
             zoomControlOptions      : {
                 position: google.maps.ControlPosition.LEFT_CENTER,
@@ -52,7 +58,7 @@ app.controller("UberSPController", function($q, $scope, $http)
         {
             navigator.geolocation.getCurrentPosition(function(pos)
             {
-                orgnCoords = pos.coords;
+                // orgnCoords = pos.coords;
                 orgnLatLng = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
                 var infoWindow = new google.maps.InfoWindow(
                 {
@@ -131,6 +137,19 @@ app.controller("UberSPController", function($q, $scope, $http)
             map.fitBounds(bounds);
         });
 
+        /* Get the origin address' co-ordinates and group number. */
+        google.maps.event.addListener(orgnAddrBox, "places_changed", function()
+        {
+            var places = orgnAddrBox.getPlaces();
+            if(places.length == 0)
+            {
+                return;
+            }
+            orgnCoords = places[0].geometry.location;
+            $scope.group("nyc", orgnCoords.A, orgnCoords.F);
+        });        
+
+        /* Get the destination address' co-ordinates and group number. */
         google.maps.event.addListener(destAddrBox, "places_changed", function()
         {
             var places = destAddrBox.getPlaces();
@@ -143,7 +162,7 @@ app.controller("UberSPController", function($q, $scope, $http)
 
 
         /* Bias the search boxes' results towards places that are within the bounds
-        of the current map's viewport */
+        of the current map's viewport. */
         google.maps.event.addListener(map, "bounds_changed", function()
         {
             searchBox.setBounds(map.getBounds());
@@ -157,7 +176,8 @@ app.controller("UberSPController", function($q, $scope, $http)
     {
         if(errFlag)
         {
-            var content = "ERROR: The Geolocation service failed.";
+            // var content = "ERROR: The Geolocation service failed.";
+            var content = "The City of New York."
         }
         else
         {
@@ -165,12 +185,12 @@ app.controller("UberSPController", function($q, $scope, $http)
         }
 
         var mapOptions = {
+            content : content,
             map     : map,
-            position: new google.maps.LatLng(42.3344028, -71.1009781),
-            content : content
+            position: new google.maps.LatLng(40.7962998, -73.9210438)
         };
         var infoWindow = new google.maps.InfoWindow(mapOptions);
-        map.setCenter(macpOptions.position);
+        map.setCenter(mapOptions.position);
     };
 
     /* Reverse geocoding to a formatted address */
@@ -194,6 +214,68 @@ app.controller("UberSPController", function($q, $scope, $http)
         });
     };
 
+    /* Draw a rectangle using a pair of co-ordinates. */
+    function drawRectangle(map, lat, lng, color)
+    {
+        new google.maps.Rectangle(
+        {
+            strokeColor  : color,
+            strokeOpacity: 0,
+            strokeWeight : 0,
+            fillColor    : color,
+            fillOpacity  : 0.25,
+            map          : map,
+            bounds       : new google.maps.LatLngBounds(
+                new google.maps.LatLng(lat - RADIUS, lng - RADIUS),
+                new google.maps.LatLng(lat + RADIUS, lng + RADIUS))
+        });
+    };
+
+    /* Draw rectangles using a set of co-ordinate pairs. */
+    function drawRectangles(map, coords, color)
+    {
+        for(var i = 0; i < coords.length; i++)
+        {
+            drawRectangle(map, coords[i][0], coords[i][1], color);
+        }
+    };
+
+    /* Calculate the group number using the co-ordinates. */
+    $scope.group = function(city, lat, lng)
+    {
+        console.log("%c   [echo] Calculating group information for the location (" +
+                    lat + ", " + lng + ")",
+                    "font-family: Courier New;");
+        GlobalService.groups(city, function(res1)
+        {
+            /*
+            console.log("%cGroups>",
+                        "font-family: Courier New; font-weight: bold;");
+            console.log(res1);
+            */
+
+            for(var i = 0; i < res1.length; i++)
+            {
+                GlobalService.coords(city, res1[i].gid, function(res2)
+                {
+                    for(var j = 0; j < res2[0].coords.length; j++)
+                    {
+                        if(lat >= res2[0].coords[j][0] - RADIUS &&
+                           lat <= res2[0].coords[j][0] + RADIUS &&
+                           lng >= res2[0].coords[j][1] - RADIUS &&
+                           lng <= res2[0].coords[j][1] + RADIUS)
+                        {
+                            console.log("%c   [echo] Origin address belongs to group " + res2[0].gid,
+                                        "font-family: Courier New;");
+                            drawRectangles(map, res2[0].coords, "#FF0000");
+                            break;
+                        }
+                    }
+                });
+            }
+        });
+    };
+
     /* =========================== */
     /* GOOGLE MAPS FUNCTIONS : END */
     /* =========================== */
@@ -206,6 +288,8 @@ app.controller("UberSPController", function($q, $scope, $http)
     $scope.uberPrices = [];
     function queryUber(orgnLat, orgnLng, destLat, destLng)
     {
+        console.log("%c   [echo] Querying Uber based on the selected source and destination",
+                    "font-family: Courier New;");
         $.ajax(
         {
             url: "https://api.uber.com/v1/estimates/price",
@@ -238,7 +322,7 @@ app.controller("UberSPController", function($q, $scope, $http)
 
     $scope.findUber = function()
     {
-        queryUber(orgnCoords.latitude, orgnCoords.longitude, destCoords.A, destCoords.F);
+        queryUber(orgnCoords.A, orgnCoords.F, destCoords.A, destCoords.F);
     };
 
     $scope.formatCarType = function(carType)
