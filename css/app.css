@@ -60,6 +60,18 @@ html, .asBody, .asContainerDiv, .asMapDiv
     width: 100%;
 }
 
+.asPrimaryOptsDiv
+{
+    float: left;
+    width: 50%;
+}
+
+.asSecondaryOptsDiv
+{
+    float: left;
+    width: 50%;
+}
+
 .asTitleDiv
 {
     background-color: #E6E6E6;
@@ -72,6 +84,7 @@ html, .asBody, .asContainerDiv, .asMapDiv
 .asUberDiv
 {
     margin-left: 5%;
+    margin-right: 5%;
     text-align: left;
 }
 
@@ -89,6 +102,11 @@ html, .asBody, .asContainerDiv, .asMapDiv
 }
 
 .asH2
+{
+    font-weight: normal;
+}
+
+.asH3
 {
     font-weight: normal;
 }
@@ -136,6 +154,12 @@ html, .asBody, .asContainerDiv, .asMapDiv
 {
     border-color: #4d90fe;
 }
+
+.asSecondaryOptsP
+{
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
 /* Element : END */
 
 /* Link : BEGIN */
@@ -148,6 +172,12 @@ html, .asBody, .asContainerDiv, .asMapDiv
 /* Link : END */
 
 /* Span : BEGIN */
+.asAddressSpan
+{
+    color: #0B610B;
+    font-size: 18px;
+}
+
 .asCarAttrSpan
 {
     color: #585858;
