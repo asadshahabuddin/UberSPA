@@ -39,6 +39,19 @@ var error = function(obj)
 {
     console.log("%c  [error] " + obj, "color: red; font-family: Courier New;")
 };
+
+/* Sleep for the specied number of milliseconds. */
+var sleep = function(milliseconds)
+{
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++)
+    {
+        if((new Date().getTime() - start) > milliseconds)
+        {
+            break;
+        }
+    }
+};
 /* ======================= */
 /* UTILITY FUNCTIONS : END */
 /* ======================= */
@@ -521,28 +534,28 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         GlobalService.reverseGeocode(orgnCoords, function(res, status)
         {
             orgnAddress = res[0].formatted_address;
-        });
-        /* Calculate the price estimates */
-        GlobalService.uberPriceEstimates(orgnCoords, destCoords, function(res)
-        {
-            /* Update the AngularJS scope variable and apply the scope. */
-            for(var i = 0; i < res.prices.length; i++)
+
+            /* Calculate the price estimates */
+            GlobalService.uberPriceEstimates(orgnCoords, destCoords, function(res)
             {
-                if(res.prices[i].display_name.toLowerCase() === carType.toLowerCase() &&
-                   res.prices[i].low_estimate < $scope.primaryPrices[res.prices[i].product_id].high_estimate)
+                /* Update the AngularJS scope variable and apply the scope. */
+                for(var i = 0; i < res.prices.length; i++)
                 {
-                    $scope.secondary = true;
-                    if($scope.secondaryPrices[key] === undefined)
+                    if(res.prices[i].display_name.toLowerCase() === carType.toLowerCase() &&
+                       res.prices[i].low_estimate < $scope.primaryPrices[res.prices[i].product_id].high_estimate)
                     {
-                        $scope.secondaryPrices[key] = {};
-                        $scope.secondaryPrices[key].orgn = orgnAddress;
-                        $scope.secondaryPrices[key].prices = [];
+                        if($scope.secondaryPrices[key] === undefined)
+                        {
+                            $scope.secondaryPrices[key] = {};
+                            $scope.secondaryPrices[key].orgn = orgnAddress;
+                            $scope.secondaryPrices[key].prices = [];
+                        }
+                        $scope.secondaryPrices[key].prices.push(res.prices[i]);
                     }
-                    $scope.secondaryPrices[key].prices.push(res.prices[i]);
                 }
-            }
-            $scope.$apply();
-            deferred.resolve();
+                $scope.$apply();
+                deferred.resolve();
+            });
         });
 
         return deferred.promise;
@@ -560,15 +573,29 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             return findAltOrigins(2000);
         }).then(function()
         {
+            /* Avoid making too many requests per second. */
+            sleep(2000);
             promises = [];
-            for(var i = 0; i < altOrgns.length; i++)
+            for(var i = 0; i < 3 && i < altOrgns.length; i++)
             {
                 promises.push(uberSecondaryPriceEstimates(altOrgns[i], destCoords, carType));
             }
             $q.all(promises).then(function(res)
             {
-                cout("\nAlternative prices>", "black", "bold");
-                console.log($scope.secondaryPrices);
+                var size = 0;
+                for(key in $scope.secondaryPrices)
+                {
+                    if($scope.secondaryPrices.hasOwnProperty(key))
+                    {
+                        size++;
+                    }
+                }
+                if(size > 0)
+                {
+                    $scope.secondary = true;
+                    cout("\nAlternative prices>", "black", "bold");
+                    console.log($scope.secondaryPrices);
+                }
             });
         });
     };
