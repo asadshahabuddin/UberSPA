@@ -33,52 +33,59 @@
                     </a -->
                 </header>
             </div>
-            <input class="asMapInput" id="pac-input" type="text" placeholder="Search map"/>
+            <input class="asMapInput" id="pac-input" type="text" placeholder="Search and zoom"/>
             <div class="asMapDiv" id="map-canvas"></div>
 
             <div class="asUberDiv">
                 <h2 class="asH2">Cars</h2>
                 <form>
-                    <!-- span class="asLabelSpan">From&nbsp;</span -->
                     <input ng-model="orgnAddr" class="asInputField" id="orgn-addr" type="text" placeholder="Origin address"/><br/>
-                    <!-- span class="asLabelSpan">To&nbsp;</span -->
                     <input ng-model="destAddr" class="asInputField" id="dest-addr" type="text" placeholder="Destination address"/><br/>
-                    <!-- button ng-click="originAddr()" class="asButton">Find me</button -->
-                    <button ng-click="findUber()" class="asButton">Query Uber</button><br/>
+                    <select ng-model="carType" class="asDropdownList">
+                        <option value="UberX">UberX</option>
+                        <option value="UberXL">UberXL</option>
+                        <option value="UberSUV">UberSUV</option>
+                        <option value="UberBLACK">UberBLACK</option>
+                        <option value="UberT">UberT</option>
+                    </select>
+                    <br/>
+                    <button ng-click="findUber(carType)" class="asButton">Find</button><br/>
                 </form>
 
                 <hr ng-show="primary" class="asHr"/>
 
-                <!-- Primary ride options -->
-                <div ng-show="primary" class="asPrimaryOptsDiv">
-                    <h2 class="asH2">Primary options</h2>
-                    <p ng-repeat="price in primaryPrices">
-                        <span class="asCarTypeSpan">{{formatCarType(price.display_name)}}</span><br/>
-                        <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{price.distance}} miles</span><br/>
-                        <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{price.estimate}}</span><br/>
-                        <span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
-                            <span ng-show="primaryTimes[price.product_id]">{{primaryTimes[price.product_id]}} seconds</span>
-                            <span ng-show="!primaryTimes[price.product_id]">Unavailable</span>
-                        </span><br/>
-                        <span class="asCarAttrSpan">Travel time: </span><span class="asCarValueSpan">{{price.duration}} seconds</span><br/>
-                    </p>
-                </div>
-
-                <!-- Secondary ride options -->
-                <div ng-show="primary" class="asSecondaryOptsDiv">
-                    <h2 class="asH2">Alternative Routes</h2>
-                    <div ng-repeat="prices in secondaryPrices">
-                        <span class="asAddressSpan">{{prices.orgn}}</span>
-                        <p ng-repeat="price in prices.prices" class="asSecondaryOptsP">
+                <div class="asOptsDiv">
+                    <!-- Primary option (user location) -->
+                    <h2 ng-show="primary" class="asH2">Your location</h2>
+                    <div ng-show="primary" class="asPrimaryOptsDiv">
+                        <p ng-repeat="price in primaryPrices">
                             <span class="asCarTypeSpan">{{formatCarType(price.display_name)}}</span><br/>
                             <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{price.distance}} miles</span><br/>
                             <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{price.estimate}}</span><br/>
-                            <!-- span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
+                            <span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
                                 <span ng-show="primaryTimes[price.product_id]">{{primaryTimes[price.product_id]}} seconds</span>
                                 <span ng-show="!primaryTimes[price.product_id]">Unavailable</span>
-                            </span><br/-->
+                            </span><br/>
                             <span class="asCarAttrSpan">Travel time: </span><span class="asCarValueSpan">{{price.duration}} seconds</span><br/>
                         </p>
+                    </div>
+
+                    <!-- Secondary options (vicinity) -->
+                    <h2 ng-show="secondary" class="asH2">Cheaper locations</h2>
+                    <div ng-show="secondary" class="asSecondaryOptsDiv">
+                        <div ng-repeat="prices in secondaryPrices">
+                            <span class="asAddressSpan">{{prices.orgn}}</span>
+                            <p ng-repeat="price in prices.prices" class="asSecondaryOptsP">
+                                <span class="asCarTypeSpan">{{formatCarType(price.display_name)}}</span><br/>
+                                <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{price.distance}} miles</span><br/>
+                                <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{price.estimate}}</span><br/>
+                                <!-- span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
+                                    <span ng-show="primaryTimes[price.product_id]">{{primaryTimes[price.product_id]}} seconds</span>
+                                    <span ng-show="!primaryTimes[price.product_id]">Unavailable</span>
+                                </span><br/-->
+                                <span class="asCarAttrSpan">Travel time: </span><span class="asCarValueSpan">{{price.duration}} seconds</span><br/>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

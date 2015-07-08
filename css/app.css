@@ -45,7 +45,7 @@ html, .asBody, .asContainerDiv, .asMapDiv
 /* Division : BEGIN */
 .asFooterDiv
 {
-    background-color: #E6E6E6;
+    background-color: #FAFAFA; /* #E6E6E6 */
     border-top: 1px solid #ccc;
     clear: both;
     font-size: 13px;
@@ -57,19 +57,17 @@ html, .asBody, .asContainerDiv, .asMapDiv
 
 .asMapDiv
 {
-    width: 100%;
+    float: left;
+    margin-right: 2%;
+    width: 70%;
 }
 
-.asPrimaryOptsDiv
+.asOptsDiv
 {
     float: left;
-    width: 50%;
-}
-
-.asSecondaryOptsDiv
-{
-    float: left;
-    width: 50%;
+    height: 300px;
+    overflow: auto;
+    width: 25%;
 }
 
 .asTitleDiv
@@ -95,6 +93,20 @@ html, .asBody, .asContainerDiv, .asMapDiv
 /* Division : END */
 
 /* Element : BEGIN */
+.asDropdownList
+{
+    color: #585858;
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding: 4px;
+    width: 115px;
+}
+
+.asDropdownList:hover
+{
+    border-color: #4d90fe;
+}
+
 .asH1
 {
     color: #5D5D5D;
@@ -115,7 +127,6 @@ html, .asBody, .asContainerDiv, .asMapDiv
 {
     border: 0;
     border-top: 1px solid #E6E6E6;
-    clear: both;
     display: block;
     height: 1px;
     margin: 1em 0;
@@ -128,6 +139,7 @@ html, .asBody, .asContainerDiv, .asMapDiv
     line-height: 150%;
     margin-bottom: 10px;
     padding-left: 5px;
+    text-overflow: ellipsis;
     width: 300px;
 }
 
@@ -135,19 +147,19 @@ html, .asBody, .asContainerDiv, .asMapDiv
 {
     background-color: #fff;
     border: 1px solid transparent;
-    border-radius: 2px 0 0 2px;
+    border-radius: 3px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     font-family: Arial;
     font-size: 15px;
-    height: 32px;
+    height: 28px;
     margin-left: 12px;
     margin-top: 16px;
     outline: none;
     padding: 0 11px 0 13px;
     text-overflow: ellipsis;
-    width: 400px;
+    width: 300px;
 }
 
 .asMapInput:focus
@@ -159,6 +171,25 @@ html, .asBody, .asContainerDiv, .asMapDiv
 {
     margin-top: 5px;
     margin-bottom: 20px;
+}
+
+/* Override default scrollbars */
+::-webkit-scrollbar
+{
+    width: 12px;
+}
+::-webkit-scrollbar-track
+{
+    background-color: #eaeaea;
+    border-left: 1px solid #ccc;
+}
+::-webkit-scrollbar-thumb
+{
+    background-color: #ccc;
+}
+::-webkit-scrollbar-thumb:hover
+{
+    background-color: #aaa;
 }
 /* Element : END */
 
