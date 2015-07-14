@@ -86,6 +86,9 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     var groupId;
     var groupCenter;
     var altOrgns = [];
+    var markers = [];
+    var directionsDisplay;
+    var directionsService;
 
     /* ============================= */
     /* GOOGLE MAPS FUNCTIONS : BEGIN */
@@ -243,6 +246,11 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             orgnAddrBox.setBounds(map.getBounds());
             destAddrBox.setBounds(map.getBounds());
         });
+
+        /* Set up the directions service. */
+        directionsService = new google.maps.DirectionsService();
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        directionsDisplay.setMap(map);
     };
 
     /* Callback to successful HTML5 geolocation. */
@@ -400,7 +408,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         */
         groupInfo(city, lat, lng);
         echo("Origin address belongs to group " + groupId);
-        drawRectangles(map, groupCenter, "#0040FF");
+        // drawRectangles(map, groupCenter, "#0040FF");
     };
 
     /* Calculate the distnace matrix between the the two positions. */
@@ -445,6 +453,58 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         });
 
         return deferred.promise;
+    };
+
+    /* Clear previous markers and drop new ones with animation on the map. */
+    var drop = function()
+    {
+        clearMarkers();
+        for (var i = 0; i < altOrgns.length; i++)
+        {
+            addMarkerWithTimeout(altOrgns[i].latlng, i * 200);
+        }
+    };
+
+    /* Drop new markers with animation on the map. */
+    var addMarkerWithTimeout = function(latlng, timeout)
+    {
+        window.setTimeout(function()
+        {
+            markers.push(new google.maps.Marker(
+            {
+                position : latlng,
+                map      : map,
+                animation: google.maps.Animation.DROP
+            }));
+        }, timeout);
+    };
+
+    /* Clear all the current markers. */
+    var clearMarkers = function()
+    {
+        for (var i = 0; i < markers.length; i++)
+        {
+            markers[i].setMap(null);
+        }
+        markers = [];
+    };
+
+    /* Draw the walking route between two sets of co-ordinates. */
+    $scope.route = function(destCoords)
+    {
+        directionsService.route(
+        {
+            origin     : orgnCoords,
+            destination: destCoords,
+            travelMode : google.maps.TravelMode.WALKING
+        },
+        function(res, status)
+        {
+            if(status = google.maps.DirectionsStatus.OK)
+            {
+                directionsDisplay.setDirections(res);
+            }
+        });
     };
 
     /* Calculate the distance between two co-ordinate pairs. */
@@ -534,7 +594,8 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
                         if($scope.secondaryPrices[key] === undefined)
                         {
                             $scope.secondaryPrices[key] = {};
-                            $scope.secondaryPrices[key].orgn = orgnAddress;
+                            $scope.secondaryPrices[key].latlng = orgnCoords.latlng;
+                            $scope.secondaryPrices[key].address = orgnAddress;
                         }
                         $scope.secondaryPrices[key][carType] = res.prices[i];
                     }
@@ -569,6 +630,10 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             }
             $q.all(promises).then(function(res)
             {
+                /* Drop markers for secondary origins on the map. */   
+                drop();
+
+                /* Output price information for secondary origins to the console. */
                 var size = 0;
                 for(key in $scope.secondaryPrices)
                 {

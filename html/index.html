@@ -74,7 +74,8 @@
                     <h2 ng-show="secondary" class="asH2">Cheaper locations</h2>
                     <div ng-show="secondary" class="asSecondaryOptsDiv">
                         <p ng-repeat="price in secondaryPrices">
-                            <span class="asAddressSpan">{{price.orgn}}</span><br/>
+                            <span class="asAddressSpan">{{price.address}}</span>
+                            <button ng-click="route(price.latlng)" class="asRouteBtn">Route</button><br/>
                             <span class="asCarTypeSpan">{{formatCarType(carType)}}</span><br/>
                             <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{price[carType].distance}} miles</span><br/>
                             <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{price[carType].estimate}}</span><br/>
