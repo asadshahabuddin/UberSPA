@@ -413,12 +413,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             if(status === google.maps.DistanceMatrixStatus.OK &&
                res.rows[0].elements[0].duration.value <= time)
             {
-                altOrgns.push(destCoords);
-                /*
-                cout(res.originAddresses[0]                 + " to " +
-                     res.destinationAddresses[0]            + " would take " +
-                     res.rows[0].elements[0].duration.value + " seconds on foot.");
-                */
+                altOrgns.push({latlng: destCoords, travel_time: res.rows[0].elements[0].duration.value});
             }
             deferred.resolve();
         });
@@ -467,7 +462,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     /* ====================== */
     
     /* Query Uber to retrieve price estimates for the primary origin. */
-    var uberPrimaryPriceEstimates = function(orgnCoords, destCoords, carType)
+    var uberPrimaryPriceEstimates = function(orgnCoords, destCoords)
     {
         var deferred = $q.defer();
         $scope.primaryPrices = {};
@@ -482,11 +477,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             /* Update the AngularJS scope variable and apply the scope. */
             for(var i = 0; i < res.prices.length; i++)
             {
-                if(res.prices[i].display_name.toLowerCase() === carType.toLowerCase())
-                {
-                    $scope.primaryPrices[res.prices[i].product_id] = res.prices[i];
-                    break;
-                }
+                $scope.primaryPrices[res.prices[i].display_name] = res.prices[i];
             }
             $scope.$apply();
             deferred.resolve();
@@ -496,7 +487,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     };
 
     /* Query Uber to retrieve ETAs for the primary origin. */
-    var uberPrimaryTimeEstimates = function(orgnCoords, carType)
+    var uberPrimaryTimeEstimates = function(orgnCoords)
     {
         $scope.primaryTimes = {};
         var deferred = $q.defer();
@@ -508,11 +499,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             console.log(res.times);
             for(var i = 0; i < res.times.length; i++)
             {
-                if(res.times[i].display_name.toLowerCase() === carType.toLowerCase())
-                {
-                    $scope.primaryTimes[res.times[i].product_id] = res.times[i].estimate;
-                    break;
-                }
+                $scope.primaryTimes[res.times[i].display_name] = res.times[i].estimate;
             }
             $scope.$apply();
             deferred.resolve();
@@ -522,35 +509,34 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     };
 
     /* Query Uber to retrieve price estimates for the secondary origin. */
-    var uberSecondaryPriceEstimates = function(orgnCoords, destCoords, carType)
+    var uberSecondaryPriceEstimates = function(orgnCoords, destCoords)
     {
         $scope.secondaryPrices = {};
         var deferred = $q.defer()
         var orgnAddress = "";
-        var key = orgnCoords.A + "" + orgnCoords.F;
+        var key = orgnCoords.latlng.A + "" + orgnCoords.latlng.F;
         echo("Querying Uber for prices");
 
         /* Determine the origin address. */
-        GlobalService.reverseGeocode(orgnCoords, function(res, status)
+        GlobalService.reverseGeocode(orgnCoords.latlng, function(res, status)
         {
             orgnAddress = res[0].formatted_address;
 
             /* Calculate the price estimates */
-            GlobalService.uberPriceEstimates(orgnCoords, destCoords, function(res)
+            GlobalService.uberPriceEstimates(orgnCoords.latlng, destCoords, function(res)
             {
                 /* Update the AngularJS scope variable and apply the scope. */
                 for(var i = 0; i < res.prices.length; i++)
                 {
-                    if(res.prices[i].display_name.toLowerCase() === carType.toLowerCase() &&
-                       res.prices[i].low_estimate < $scope.primaryPrices[res.prices[i].product_id].high_estimate)
+                    var carType = res.prices[i].display_name;
+                    if(res.prices[i].low_estimate < $scope.primaryPrices[carType].high_estimate)
                     {
                         if($scope.secondaryPrices[key] === undefined)
                         {
                             $scope.secondaryPrices[key] = {};
                             $scope.secondaryPrices[key].orgn = orgnAddress;
-                            $scope.secondaryPrices[key].prices = [];
                         }
-                        $scope.secondaryPrices[key].prices.push(res.prices[i]);
+                        $scope.secondaryPrices[key][carType] = res.prices[i];
                     }
                 }
                 $scope.$apply();
@@ -562,23 +548,24 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     };
 
     /* Find all the Uber options from the source to the destination. */
-    $scope.findUber = function(carType)
+    $scope.findUber = function()
     {
         var promises = [];
         
-        promises.push(uberPrimaryPriceEstimates(orgnCoords, destCoords, carType));
-        promises.push(uberPrimaryTimeEstimates(orgnCoords, carType));
+        promises.push(uberPrimaryPriceEstimates(orgnCoords, destCoords));
+        promises.push(uberPrimaryTimeEstimates(orgnCoords));
         $q.all(promises).then(function(res)
         {   
-            return findAltOrigins(2000);
+            return findAltOrigins(600);
         }).then(function()
         {
             /* Avoid making too many requests per second. */
             sleep(2000);
             promises = [];
+            /* Limit the number of alternative origin locations to 3. */
             for(var i = 0; i < 3 && i < altOrgns.length; i++)
             {
-                promises.push(uberSecondaryPriceEstimates(altOrgns[i], destCoords, carType));
+                promises.push(uberSecondaryPriceEstimates(altOrgns[i], destCoords));
             }
             $q.all(promises).then(function(res)
             {
@@ -603,7 +590,10 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     /* Format the 'car type' field. */
     $scope.formatCarType = function(carType)
     {
-        return carType.charAt(0).toUpperCase() + carType.slice(1);
+        if(carType != undefined)
+        {
+            return carType.charAt(0).toUpperCase() + carType.slice(1);
+        }
     };
 
     /* ==================== */
