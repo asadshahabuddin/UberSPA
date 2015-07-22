@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.io.BufferedReader;
 import java.text.DecimalFormat;
+import com.uberspa.global.Properties;
 
 /**
  * Author : Asad Shahabuddin
@@ -18,46 +19,47 @@ import java.text.DecimalFormat;
 
 public class ProcessCoords
 {
-    /* Maps to store polygon extremities for each surge group */
+    /* Maps to store polygon extremities for each surge group. */
     private HashMap<String, LatLng> minLatMap;
     private HashMap<String, LatLng> minLngMap;
     private HashMap<String, LatLng> maxLatMap;
     private HashMap<String, LatLng> maxLngMap;
-    
+
     private BufferedReader br;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public ProcessCoords()
     {
-        minLatMap = new HashMap<String, LatLng>();
-        minLngMap = new HashMap<String, LatLng>();
-        maxLatMap = new HashMap<String, LatLng>();
-        maxLngMap = new HashMap<String, LatLng>();
+        minLatMap = new HashMap<>();
+        minLngMap = new HashMap<>();
+        maxLatMap = new HashMap<>();
+        maxLngMap = new HashMap<>();
     }
-    
+
     /**
      * Parse and return all surge price groups in the file.
      * @param file
      *            The file containing surge price group data.
      * @return
      *            A list of all surge price groups.
+     * @throws IOException
      */
     public HashSet<String> parseGroups(String file)
         throws IOException
     {
-        HashSet<String> groups = new HashSet<String>();
+        HashSet<String> groups = new HashSet<>();
         br = new BufferedReader(new FileReader(file));
-        String line = "";
+        String line;
         while((line = br.readLine()) != null)
         {
-            groups.add(line.split("\\s+")[2]);
+            groups.add(line.split("\\s+")[3]);
         }
         br.close();
         return groups;
     }
-    
+
     /**
      * Calculate the minimum and maximum latitudes and longitudes
      * for each surge price group.
@@ -69,14 +71,14 @@ public class ProcessCoords
         throws IOException
     {
         br = new BufferedReader(new FileReader(file));
-        String line = "";
-        
+        String line;
+
         while((line = br.readLine()) != null)
         {
             String[] position = line.split("\\s+");
             Double lat = Double.valueOf(position[0]);
             Double lng = Double.valueOf(position[1]);
-            
+
             if(!minLatMap.containsKey(position[2]))
             {
                 minLatMap.put(position[2], new LatLng(Double.MAX_VALUE, 0D, 0D));
@@ -84,7 +86,7 @@ public class ProcessCoords
                 maxLatMap.put(position[2], new LatLng(-Double.MAX_VALUE, 0D, 0D));
                 maxLngMap.put(position[2], new LatLng(0D, -Double.MAX_VALUE, 0D));
             }
-            
+
             if(Double.compare(lat, minLatMap.get(position[2]).getLatitude()) < 0)
             {
                 minLatMap.put(position[2], new LatLng(lat, lng, 0D));
@@ -104,7 +106,7 @@ public class ProcessCoords
         }
         br.close();
     }
-    
+
     /**
      * Output the maps containing group extremities data to console.
      */
@@ -119,7 +121,7 @@ public class ProcessCoords
                                ")");
         }
         System.out.println();
-        
+
         System.out.println(">Minimum longitudes");
         for(String key : minLngMap.keySet())
         {
@@ -129,7 +131,7 @@ public class ProcessCoords
                                ")");
         }
         System.out.println();
-        
+
         System.out.println(">Maximum latitudes");
         for(String key : maxLatMap.keySet())
         {
@@ -139,7 +141,7 @@ public class ProcessCoords
                                ")");
         }
         System.out.println();
-        
+
         System.out.println(">Maximum longitudes");
         for(String key : maxLngMap.keySet())
         {
@@ -150,7 +152,7 @@ public class ProcessCoords
         }
         System.out.println();
     }
-    
+
     /**
      * Sort a list of 2D coordinates in clockwise order. 
      * @param file
@@ -162,17 +164,17 @@ public class ProcessCoords
     public void sortClockwise(String file, String group)
         throws IOException
     {
-        ArrayList<LatLng> coords = new ArrayList<LatLng>();
+        ArrayList<LatLng> coords = new ArrayList<>();
         br = new BufferedReader(new FileReader(file));
-        String line = "";
-        
+        String line;
+
         while((line = br.readLine()) != null)
         {
             String[] position = line.split("\\s+");
-            if(position[2].equals(group))
+            if(position[3].equals(group))
             {
-                coords.add(new LatLng(Double.valueOf(position[0]),
-                                      Double.valueOf(position[1]),
+                coords.add(new LatLng(Double.valueOf(position[1]),
+                                      Double.valueOf(position[2]),
                                       0D));
             }
         }
@@ -189,7 +191,7 @@ public class ProcessCoords
         Collections.sort(coords, new LatLngComparator());
         writeCoordsToFS(coords, group);
     }
-    
+
     /**
      * Calculate the centroid of the polygon represented by the specified  
      * set of coordinates.
@@ -204,21 +206,21 @@ public class ProcessCoords
         double sumY = 0D;
         int count   = 0;
         DecimalFormat df = new DecimalFormat(".######");
-        
+
         for(LatLng coord : coords)
         {
             sumX += coord.getLatitude();
             sumY += coord.getLongitude();
             count++;
         }
-        
+
         return new LatLng(
             Double.valueOf(df.format(sumX / count)),
             Double.valueOf(df.format(sumY / count)),
             0D
         );
     }
-    
+
     /**
      * Calculate polar angle wrt to the reference location.
      * @param ref
@@ -234,18 +236,18 @@ public class ProcessCoords
         return Math.atan2(p.getLongitude() - ref.getLongitude(),
                           p.getLatitude()  - ref.getLatitude());
     }
-    
+
     /**
      * Output the list of coordinates to console.
      * @param coords
      *            The list of coordinates.
      */
     public void writeCoordsToFS(ArrayList<LatLng> coords, String group)
-        throws IOException
+            throws IOException
     {
-        FileWriter fw = new FileWriter(Properties.FILE_NYC_OUT, true);
+        FileWriter fw = new FileWriter(Properties.FILE_BOSTON_OUT, true);
         fw.write(">Group " + group + "\n");
-        
+
         for(LatLng coord : coords)
         {
             fw.write("("  + coord.getLatitude() +
@@ -253,11 +255,11 @@ public class ProcessCoords
                      ") with polar angle " + coord.getPolarAngle() +
                      " radians\n");
         }
-        
+
         fw.write("\n");
         fw.close();
     }
-    
+
     /**
      * Main method for unit testing
      * @param args
@@ -272,9 +274,9 @@ public class ProcessCoords
         try
         {
             ProcessCoords pc = new ProcessCoords();
-            for(String group : pc.parseGroups(Properties.FILE_NYC_IN))
+            for(String group : pc.parseGroups(Properties.FILE_BOSTON_IN))
             {
-                pc.sortClockwise(Properties.FILE_NYC_IN, group);
+                pc.sortClockwise(Properties.FILE_BOSTON_IN, group);
             }
         }
         catch(IOException ioe)

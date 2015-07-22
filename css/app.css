@@ -1,13 +1,12 @@
 /*
     Author : Asad Shahabuddin
-    File   : app.css
-    Details: CSS for application - Uber SPA.
+    Created: May 21, 2015
     Email  : shahabuddin.a@husky.neu.edu
 */
 
 html, .asBody, .asContainerDiv, .asMapDiv
 {
-    height: 98%;
+    height: 105%;
     margin: 0px;
     padding: 0px;
 }
@@ -79,7 +78,7 @@ html, .asBody, .asContainerDiv, .asMapDiv
     width: 70%;
 }
 
-.asOptsDiv
+.asDetailsDiv
 {
     float: left;
     height: 300px;
@@ -269,4 +268,32 @@ html, .asBody, .asContainerDiv, .asMapDiv
     color: #6E6E6E;
 }
 /* Span : END */
+
+/* Table : BEGIN */
+.asTable
+{
+    background-color: #E6E6E6;
+    border: 1px solid #E6E6E6;
+    table-layout: fixed;
+    width: 25%;
+}
+
+.asTr1
+{
+    background-color: #FAFAFA;
+}
+
+.asTr2
+{
+    background-color: #FFFFFF;
+}
+
+.asTd
+{
+    color: #6E6E6E;
+    font-size: 13px;
+    padding: 5px;
+    text-align: center;
+}
+/* Table : END */
 /* End of app.css */

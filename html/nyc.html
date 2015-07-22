@@ -1,0 +1,129 @@
+<!--
+    Author : Asad Shahabuddin
+    Created: May 21, 2015
+    Email  : shahabuddin.a@husky.neu.edu
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <!-- Head section : BEGIN -->
+    <head>
+        <meta charset="UTF-8"/>
+        <title>New York City - Uber SPA</title>
+        <link rel="icon" href="image/icon3.png"/>
+
+        <!-- Style sheets -->
+        <link rel="stylesheet" href="css/app.css"/>
+    </head>
+    <!-- Head section : END -->
+
+    <!-- Body section : BEGIN -->
+    <body class="asBody" ng-app="UberSPApp">
+        <div class="asContainerDiv" ng-controller="UberSPController">
+            <!-- Title -->
+            <div class="asTitleDiv">
+                <header class="asNav">
+                    <a class="asBannerA">> Uber SPA</a>
+                    <!-- a class="asCreditA" href="http://localhost:3000/html/doc.html#provider"
+                       onmouseover="document.getElementById('as-credit').src='image/credits.jpg'"
+                       onmouseout="document.getElementById('as-credit').src='image/none.jpg'">
+                        Credits
+                        <img class="asCreditImg" src="image/none.jpg" id="as-credit"/>
+                    </a -->
+                </header>
+            </div>
+            <input class="asMapInput" id="pac-input" type="text" placeholder="Search and zoom"/>
+            <div class="asMapDiv" id="map-canvas"></div>
+
+            <div class="asUberDiv">
+                <h2 class="asH2">Cars</h2>
+                <form>
+                    <input class="asInputField" id="orgn-addr" ng-model="orgnAddr" type="text" placeholder="Origin address"/><br/>
+                    <input class="asInputField" id="dest-addr" ng-model="destAddr" type="text" placeholder="Destination address"/><br/>
+                    <select class="asDropdownList" ng-model="carType">
+                        <option value="uberX">UberX</option>
+                        <option value="uberXL">UberXL</option>
+                        <option value="UberSUV">UberSUV</option>
+                        <option value="UberBLACK">UberBLACK</option>
+                    </select>
+                    <br/>
+                    <button class="asButton" ng-click="findUber()">Find</button><br/>
+                </form>
+
+                <hr class="asHr" ng-show="primary"/>
+
+                <!-- Summary section -->
+                <div class="asSummaryDiv" ng-show="secondary">
+                    <h2 class="asH2">Summary</h2>
+                    <table class="asTable">
+                        <tr class="asTr1">
+                            <td class="asTd asBoldSpan">{{orgnAddress}}</td>
+                            <td class="asTd asBoldSpan" ng-repeat="price in secondaryPrices">{{price.address}}</td>
+                        </tr>
+                        <tr class="asTr2">
+                            <td class="asTd">{{primaryPrices[carType].estimate}}</td>
+                            <td class="asTd" ng-repeat="price in secondaryPrices">{{price[carType].estimate}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <hr class="asHr" ng-show="secondary"/>
+
+                <!-- Details section -->
+                <div class="asDetailsDiv">
+                    <!-- Primary option (user location) -->
+                    <h2 class="asH2" ng-show="primary">Your location</h2>
+                    <div class="asPrimaryOptsDiv" ng-show="primary">
+                        <span class="asCarTypeSpan">{{formatCarType(carType)}}</span><br/>
+                        <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{primaryPrices[carType].distance}} miles</span><br/>
+                        <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{primaryPrices[carType].estimate}}</span><br/>
+                        <span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
+                            <span ng-show="primaryTimes[carType]">{{primaryTimes[carType]}} seconds</span>
+                            <span ng-show="!primaryTimes[carType]">Unavailable</span>
+                        </span><br/>
+                        <span class="asCarAttrSpan">Travel time: </span><span class="asCarValueSpan">{{primaryPrices[carType].duration}} seconds</span><br/>
+                    </div>
+
+                    <hr class="asHr" ng-show="secondary"/>
+
+                    <!-- Secondary options (vicinity) -->
+                    <h2 class="asH2" ng-show="secondary">Cheaper locations</h2>
+                    <div class="asSecondaryOptsDiv" ng-show="secondary">
+                        <p ng-repeat="price in secondaryPrices">
+                            <span class="asAddressSpan">{{price.address}}</span>
+                            <button class="asRouteBtn" ng-click="route(price.latlng)">Route</button><br/>
+                            <span class="asCarTypeSpan">{{formatCarType(carType)}}</span><br/>
+                            <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{price[carType].distance}} miles</span><br/>
+                            <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{price[carType].estimate}}</span><br/>
+                            <!-- span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
+                                <span ng-show="primaryTimes[price.product_id]">{{primaryTimes[price.product_id]}} seconds</span>
+                                <span ng-show="!primaryTimes[price.product_id]">Unavailable</span>
+                            </span><br/-->
+                            <span class="asCarAttrSpan">Travel time: </span><span class="asCarValueSpan">{{price[carType].duration}} seconds</span><br/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="asFooterDiv">
+                <span class="asFooterSpan1">&copy; 2015 Northeastern University - </span>
+                <span class="asFooterSpan2">Asad Shahabuddin</span>
+            </div>
+        </div>
+        
+        <!-- Scripts -->
+        <!--
+        The inclusion of JavaScripts has been deferred to the end of body section
+        to speed up HTML load time.
+        -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
+        <!-- script src="https://code.angularjs.org/1.3.13/angular-route.min.js"></script -->
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;signed_in=true&amp;libraries=places"></script>
+        <script src="js/nyc.js"></script>
+        <script src="js/service.js"></script>
+    </body>
+    <!-- Body section : END -->
+</html>
+<!-- End of index.html -->

@@ -13,8 +13,7 @@ public class LatLngComparator implements Comparator<LatLng>
     @Override
     public int compare(LatLng latLng1, LatLng latLng2)
     {
-        return Double.compare(latLng1.getPolarAngle(),
-                              latLng2.getPolarAngle());
+        return Double.compare(latLng1.getPolarAngle(), latLng2.getPolarAngle());
     }
 }
 /* End of LatLngComparator.java */

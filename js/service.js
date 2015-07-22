@@ -1,7 +1,6 @@
 /*
     Author : Asad Shahabuddin
-    File   : service.js
-    Details: REST Service for the Uber Surge Pricing application.
+    Created: Jun 21, 2015
     Email  : shahabuddin.a@husky.neu.edu
 */
 

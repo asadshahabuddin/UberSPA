@@ -1,7 +1,6 @@
 /*
     Author : Asad Shahabuddin
-    File   : app.js
-    Details: JS for 'UberSPA'.
+    Created: May 21, 2015
     Email  : shahabuddin.a@husky.neu.edu
 */
 
@@ -224,7 +223,8 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
                 position: orgnCoords
             });
             /* Calculate the group information and draw an overlay on the map. */
-            $scope.group("nyc", orgnCoords.A, orgnCoords.F);
+            $scope.orgnAddress = places[0].name;
+            $scope.group("boston", orgnCoords.A, orgnCoords.F);
         });        
 
         /* Get the destination address' co-ordinates and group number. */
@@ -280,7 +280,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         if(err)
         {
             // var content = "ERROR: The Geolocation service failed.";
-            var content = "The City of New York."
+            var content = "The City of Boston."
         }
         else
         {
@@ -290,7 +290,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         var mapOptions = {
             content : content,
             map     : map,
-            position: new google.maps.LatLng(40.7962998, -73.9210438)
+            position: new google.maps.LatLng(42.3573901, -71.0558696)
         };
         var infoWindow = new google.maps.InfoWindow(mapOptions);
         map.setCenter(mapOptions.position);
@@ -408,7 +408,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         */
         groupInfo(city, lat, lng);
         echo("Origin address belongs to group " + groupId);
-        // drawRectangles(map, groupCenter, "#0040FF");
+        drawRectangles(map, groupCenter, "#0040FF");
     };
 
     /* Calculate the distnace matrix between the the two positions. */
@@ -667,6 +667,6 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
 
     /* Main */
     google.maps.event.addDomListener(window, "load", initGoogleMaps);
-    createGroupMap("nyc");
+    createGroupMap("boston");
 });
-/* End of app.js */
+/* End of boston.js */
