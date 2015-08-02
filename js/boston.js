@@ -224,7 +224,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             });
             /* Calculate the group information and draw an overlay on the map. */
             $scope.orgnAddress = places[0].name;
-            $scope.group("boston", orgnCoords.A, orgnCoords.F);
+            $scope.group("boston", orgnCoords.G, orgnCoords.K);
         });        
 
         /* Get the destination address' co-ordinates and group number. */
@@ -554,7 +554,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         echo("Querying Uber for ETAs");
 
         GlobalService.uberTimeEstimates(orgnCoords, function(res)
-        {
+        {*
             cout("\nTime estimates>", "black", "bold");
             console.log(res.times);
             for(var i = 0; i < res.times.length; i++)
@@ -574,7 +574,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         $scope.secondaryPrices = {};
         var deferred = $q.defer()
         var orgnAddress = "";
-        var key = orgnCoords.latlng.A + "" + orgnCoords.latlng.F;
+        var key = orgnCoords.latlng.G + "" + orgnCoords.latlng.K;
         echo("Querying Uber for prices");
 
         /* Determine the origin address. */
@@ -664,6 +664,37 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     /* ==================== */
     /* UBER FUNCTIONS : END */
     /* ==================== */
+
+    /* Find alternative origin locations. */
+    var downloadDistanceMatrix = function()
+    {
+        cout("\nDistance Matrix>");
+        var latLngList = [];
+        for(var gid in groupMap)
+        {
+            var coords = groupMap[gid];
+            for(var i = 0; i < coords.length; i++)
+            {
+                latLngList.push(coords[i]);
+            }
+        }
+        for(var i = 0; i < 1; i++)
+        {
+            for(var j = 0; j < 10; j++)
+            {
+                GlobalService.distance(new google.maps.LatLng(latLngList[i][0], latLngList[i][1]),
+                                       new google.maps.LatLng(latLngList[j][0], latLngList[j][1]),
+                                       function(res, status)
+                {
+                    echo("(" + latLngList[i][0] + ", " + latLngList[i][1] +
+                         ") to (" + latLngList[j][0] + ", " + latLngList[j][1] +
+                         ") - " + res.rows[0].elements[0].duration.value);
+                });
+                sleep(1000);
+            }
+        }
+        echo("All the LatLng pairs have been processed");
+    };
 
     /* Main */
     google.maps.event.addDomListener(window, "load", initGoogleMaps);

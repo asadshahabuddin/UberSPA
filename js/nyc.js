@@ -224,7 +224,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             });
             /* Calculate the group information and draw an overlay on the map. */
             $scope.orgnAddress = places[0].name;
-            $scope.group("nyc", orgnCoords.A, orgnCoords.F);
+            $scope.group("nyc", orgnCoords.G, orgnCoords.K);
         });        
 
         /* Get the destination address' co-ordinates and group number. */
@@ -574,7 +574,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         $scope.secondaryPrices = {};
         var deferred = $q.defer()
         var orgnAddress = "";
-        var key = orgnCoords.latlng.A + "" + orgnCoords.latlng.F;
+        var key = orgnCoords.latlng.G + "" + orgnCoords.latlng.K;
         echo("Querying Uber for prices");
 
         /* Determine the origin address. */

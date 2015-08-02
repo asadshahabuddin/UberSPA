@@ -7,8 +7,8 @@
 app.factory("GlobalService", function GlobalService($http)
 {
 	/* Constants */
-	UBER_CLIENT_ID    = "EVYAt6HcmlxXyvp3m7FX4k5claG6Bqa";
-    UBER_SERVER_TOKEN = "i62YyuNa-budKDytw1Le6HTQzt-p17kwG8ub0B72";
+	UBER_CLIENT_ID    = "lGzad7SAnmYMndLJhSeaF6Wb0GCRNZyt";
+    UBER_SERVER_TOKEN = "aYhuSyMkHIyXq8aoX3Fx88kW8iQsJj31RsXZKr93";
 
 	/* Geocode the formatted address to an equivalent co-ordinate pair. */
     function geocode(address, callback)
@@ -55,10 +55,10 @@ app.factory("GlobalService", function GlobalService($http)
             },
             data:
             {
-                start_latitude : orgnCoords.A,
-                start_longitude: orgnCoords.F,
-                end_latitude   : destCoords.A,
-                end_longitude  : destCoords.F
+                start_latitude : orgnCoords.G,
+                start_longitude: orgnCoords.K,
+                end_latitude   : destCoords.G,
+                end_longitude  : destCoords.K
             },
             success: callback
         });
@@ -76,8 +76,8 @@ app.factory("GlobalService", function GlobalService($http)
             },
             data:
             {
-                start_latitude : orgnCoords.A,
-                start_longitude: orgnCoords.F
+                start_latitude : orgnCoords.G,
+                start_longitude: orgnCoords.K
             },
             success: callback
         });
