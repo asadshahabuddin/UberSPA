@@ -599,7 +599,8 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
                 for(var i = 0; i < res.prices.length; i++)
                 {
                     var carType = res.prices[i].display_name;
-                    if(res.prices[i].low_estimate < $scope.primaryPrices[carType].high_estimate)
+                    if(res.prices[i].surge_multiplier <= $scope.primaryPrices[carType].surge_multiplier &&
+                       res.prices[i].low_estimate < $scope.primaryPrices[carType].high_estimate)
                     {
                         if($scope.secondaryPrices[key] === undefined)
                         {

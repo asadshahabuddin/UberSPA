@@ -61,8 +61,8 @@
                             <td class="asTd asBoldSpan" ng-repeat="price in secondaryPrices">{{price.address}}</td>
                         </tr>
                         <tr class="asTr2">
-                            <td class="asTd">{{primaryPrices[carType].estimate}}</td>
-                            <td class="asTd" ng-repeat="price in secondaryPrices">{{price[carType].estimate}}</td>
+                            <td class="asTd">{{primaryPrices[carType].estimate}} ({{primaryPrices[carType].surge_multiplier}}X)</td>
+                            <td class="asTd" ng-repeat="price in secondaryPrices">{{price[carType].estimate}} ({{price[carType].surge_multiplier}}X)</td>
                         </tr>
                     </table>
                 </div>
@@ -77,6 +77,7 @@
                         <span class="asCarTypeSpan">{{formatCarType(carType)}}</span><br/>
                         <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{primaryPrices[carType].distance}} miles</span><br/>
                         <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{primaryPrices[carType].estimate}}</span><br/>
+                        <span class="asCarAttrSpan">Surge: </span><span class="asCarValueSpan">{{primaryPrices[carType].surge_multiplier}}</span><br/>
                         <span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
                             <span ng-show="primaryTimes[carType]">{{primaryTimes[carType]}} seconds</span>
                             <span ng-show="!primaryTimes[carType]">Unavailable</span>
@@ -95,10 +96,7 @@
                             <span class="asCarTypeSpan">{{formatCarType(carType)}}</span><br/>
                             <span class="asCarAttrSpan">Distance: </span><span class="asCarValueSpan">{{price[carType].distance}} miles</span><br/>
                             <span class="asCarAttrSpan">Estimate: </span><span class="asCarValueSpan">{{price[carType].estimate}}</span><br/>
-                            <!-- span class="asCarAttrSpan">ETA: </span><span class="asCarValueSpan">
-                                <span ng-show="primaryTimes[price.product_id]">{{primaryTimes[price.product_id]}} seconds</span>
-                                <span ng-show="!primaryTimes[price.product_id]">Unavailable</span>
-                            </span><br/-->
+                            <span class="asCarAttrSpan">Surge: </span><span class="asCarValueSpan">{{price[carType].surge_multiplier}}</span><br/>
                             <span class="asCarAttrSpan">Travel time: </span><span class="asCarValueSpan">{{price[carType].duration}} seconds</span><br/>
                         </p>
                     </div>
