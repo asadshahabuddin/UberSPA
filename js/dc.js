@@ -224,7 +224,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
             });
             /* Calculate the group information and draw an overlay on the map. */
             $scope.orgnAddress = places[0].name;
-            $scope.group("boston", orgnCoords.G, orgnCoords.K);
+            $scope.group("dc", orgnCoords.G, orgnCoords.K);
         });        
 
         /* Get the destination address' co-ordinates and group number. */
@@ -280,7 +280,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         if(err)
         {
             // var content = "ERROR: The Geolocation service failed.";
-            var content = "The City of Boston."
+            var content = "The City of Washington, D.C."
         }
         else
         {
@@ -290,7 +290,7 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         var mapOptions = {
             content : content,
             map     : map,
-            position: new google.maps.LatLng(42.3573901, -71.0558696)
+            position: new google.maps.LatLng(38.903521, -77.0001879)
         };
         var infoWindow = new google.maps.InfoWindow(mapOptions);
         map.setCenter(mapOptions.position);
@@ -677,6 +677,6 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
 
     /* Main */
     google.maps.event.addDomListener(window, "load", initGoogleMaps);
-    createGroupMap("boston");
+    createGroupMap("dc");
 });
-/* End of boston.js */
+/* End of dc.js */

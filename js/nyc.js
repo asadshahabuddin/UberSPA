@@ -434,19 +434,29 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     {
         var deferred = $q.defer();
         var promises = [];
+        var count = 0;
 
         for(var gid in groupMap)
         {
-            var coords = groupMap[gid];
-            for(var i = 0; i < coords.length; i++)
+            if(gid != groupId)
             {
-                promises.push(distanceMatrix(orgnCoords,
-                                             new google.maps.LatLng(coords[i][0], coords[i][1]),
-                                             time));
+                var coords = groupMap[gid];
+                for(var i = 0; i < coords.length; i++)
+                {
+                    if(Math.abs(orgnCoords.G - coords[i][0]) <= 0.01 &&
+                       Math.abs(orgnCoords.K - coords[i][1]) <= 0.01)
+                    {
+                        promises.push(distanceMatrix(orgnCoords,
+                                                     new google.maps.LatLng(coords[i][0], coords[i][1]),
+                                                     time));
+                        count++;
+                    }
+                }
             }
         }
         $q.all(promises).then(function(res)
         {
+            echo("Distance Matrix API was called " + count + " times");
             deferred.resolve();
             cout("\nAlternative origins>", "black", "bold");
             console.log(altOrgns);
@@ -459,9 +469,9 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     var drop = function()
     {
         clearMarkers();
-        for (var i = 0; i < altOrgns.length; i++)
+        for(var key in $scope.secondaryPrices)
         {
-            addMarkerWithTimeout(altOrgns[i].latlng, i * 200);
+            addMarkerWithTimeout($scope.secondaryPrices[key].latlng, i * 200);
         }
     };
 
