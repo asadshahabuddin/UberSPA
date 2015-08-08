@@ -1,6 +1,6 @@
 /*
     Author : Asad Shahabuddin
-    Created: May 21, 2015
+    Created: Aug 2, 2015
     Email  : shahabuddin.a@husky.neu.edu
 */
 
@@ -58,7 +58,7 @@ var sleep = function(milliseconds)
 var app = angular.module("UberSPApp", []);
 cout(">Uber Surge Pricing application", "navy", "bold");
 
-app.controller("UberSPController", function($scope, GlobalService, $q)
+app.controller("UberSPController", function(GlobalService, $scope, $q)
 {
     echo("Inside the main controller");
     /* Constants */
@@ -75,6 +75,8 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
 
     /* Global variables */
     var map;
+    var orgnAddrBox;
+    var destAddrBox;
     var orgnCoords;
     var destCoords;
     var orgnMarker;
@@ -145,8 +147,8 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
         var searchBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(input));
-        var orgnAddrBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(orgnAddrInput));
-        var destAddrBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(destAddrInput));
+        orgnAddrBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(orgnAddrInput));
+        destAddrBox = new google.maps.places.SearchBox(/** @type {HTMLInputElement} */(destAddrInput));
 
         /* Listen for the event fired when the user selects an item from the
         pick list. Retrieve the matching places for that item. */
@@ -620,12 +622,20 @@ app.controller("UberSPController", function($scope, GlobalService, $q)
     };
 
     /* Find all the Uber options from the source to the destination. */
-    $scope.findUber = function()
+    $scope.findUber = function(carType)
     {
-        var promises = [];
+        /* Check if this function has been rightly called. */
+        if(orgnAddrBox.getPlaces() === undefined ||
+           destAddrBox.getPlaces() === undefined ||
+           carType                 === undefined)
+        {
+            return;
+        }
         
+        var promises = [];
         promises.push(uberPrimaryPriceEstimates(orgnCoords, destCoords));
         promises.push(uberPrimaryTimeEstimates(orgnCoords));
+
         $q.all(promises).then(function(res)
         {   
             return findAltOrigins(600);

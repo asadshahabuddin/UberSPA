@@ -40,6 +40,11 @@ html, .asBody, .asContainerDiv, .asMapDiv
     color: black;
 }
 
+.asHiddenButton
+{
+    display: none;
+}
+
 .asRouteBtn
 {
     background-color: #A4A4A4;
@@ -59,6 +64,14 @@ html, .asBody, .asContainerDiv, .asMapDiv
 /* Button : BEGIN */
 
 /* Division : BEGIN */
+.asDetailsDiv
+{
+    float: left;
+    height: 300px;
+    overflow: auto;
+    width: 25%;
+}
+
 .asFooterDiv
 {
     background-color: #FAFAFA; /* #E6E6E6 */
@@ -78,12 +91,9 @@ html, .asBody, .asContainerDiv, .asMapDiv
     width: 70%;
 }
 
-.asDetailsDiv
+.asPaddedDiv
 {
-    float: left;
-    height: 300px;
-    overflow: auto;
-    width: 25%;
+    margin: 0 14.7%;
 }
 
 .asTitleDiv
@@ -106,9 +116,23 @@ html, .asBody, .asContainerDiv, .asMapDiv
 {
     margin-bottom: 25px;
 }
+
+.asWelcomeTitleDiv
+{
+    background-color: white;
+    border-bottom: 1px solid #ccc;
+    padding-left: 18.38%;
+    padding-top: 20px;
+}
 /* Division : END */
 
 /* Element : BEGIN */
+.asCenterElem
+{
+    font-size: 14px;
+    text-align: center;
+}
+
 .asDropdownList
 {
     color: #585858;
@@ -126,6 +150,7 @@ html, .asBody, .asContainerDiv, .asMapDiv
 .asH1
 {
     color: #5D5D5D;
+    font-size: 4em;
     font-weight: normal;
 }
 
@@ -209,6 +234,21 @@ html, .asBody, .asContainerDiv, .asMapDiv
 }
 /* Element : END */
 
+/* Image : BEGIN */
+.asContactImg
+{
+    height: 40px;
+    padding: 10px;
+    width: 40px;
+}
+
+.asImgLink
+{
+    height: 150px;
+    width: 150px;
+}
+/* Image : END */
+
 /* Link : BEGIN */
 .asBannerA
 {
@@ -216,13 +256,76 @@ html, .asBody, .asContainerDiv, .asMapDiv
     font-weight: bold;
     margin-left: 2em;
 }
+
+.asContactA
+{
+    text-decoration: none;
+}
+
+.asNavA
+{
+    color: black;
+    float: right;
+    font-size: 15px;
+    margin-right: 1em;
+}
+
+.asNavA:not(:hover)
+{
+    text-decoration: none;
+}
+
+.asNavA:hover
+{
+    color: #08f;
+}
+
+.asWelcomeNavA
+{
+    color: steelblue;
+    margin-right: 1em;
+}
+
+.asWelcomeNavA:not(:hover)
+{
+    text-decoration: none;
+}
 /* Link : END */
+
+/* List : BEGIN */
+.asImgList
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+ 
+.asImgList li
+{
+    display: inline-block;
+    height: 150px;
+    margin: 0 1em 1em 0;
+    padding-right: 50px;
+    position: relative;
+    width: 150px;
+}
+
+.asImgList li:hover .asImgHoverSpan
+{
+    opacity: 1;
+}
+/* List : END */
 
 /* Span : BEGIN */
 .asAddressSpan
 {
     color: #0B610B;
     font-size: 18px;
+}
+
+.asBoldSpan
+{
+    font-weight: bold;
 }
 
 .asCarAttrSpan
@@ -245,19 +348,6 @@ html, .asBody, .asContainerDiv, .asMapDiv
     font-size: 13px;
 }
 
-.asLabelSpan
-{
-    font-size: 15px;
-    display: inline-block;
-    text-align: right;
-    width: 50px;
-}
-
-.asBoldSpan
-{
-    font-weight: bold;
-}
-
 .asFooterSpan1
 {
     color: #A4A4A4;
@@ -266,6 +356,45 @@ html, .asBody, .asContainerDiv, .asMapDiv
 .asFooterSpan2
 {
     color: #6E6E6E;
+}
+
+.asImgHoverSpan
+{
+    background: rgba(0,0,0,0.5);
+    color: white;
+    cursor: pointer;
+    display: table;
+    height: 150px;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 150px;
+    -webkit-transition: opacity 500ms;
+    -moz-transition: opacity 500ms;
+    -o-transition: opacity 500ms;
+    transition: opacity 500ms;
+}
+ 
+.asImgHoverSpan span
+{
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.asLabelSpan
+{
+    font-size: 15px;
+    display: inline-block;
+    text-align: right;
+    width: 50px;
+}
+
+.asNoContentSpan
+{
+    color: #BDBDBD;
+    font-size: 32px;
 }
 /* Span : END */
 

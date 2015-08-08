@@ -44,11 +44,6 @@ var author = {
 /* ======================== */
 
 /* Enforce schema */
-var NYCSchema = new mongoose.Schema({
-    gid   : String,
-    coords: []
-}, {collection: "newyorkcity"});
-
 var BostonSchema = new mongoose.Schema({
     gid   : String,
     coords: []
@@ -79,6 +74,11 @@ var MiamiSchema = new mongoose.Schema({
     coords: []
 }, {collection: "miami"});
 
+var NYCSchema = new mongoose.Schema({
+    gid   : String,
+    coords: []
+}, {collection: "newyorkcity"});
+
 var ParisSchema = new mongoose.Schema({
     gid   : String,
     coords: []
@@ -89,16 +89,22 @@ var SeattleSchema = new mongoose.Schema({
     coords: []
 }, {collection: "seattle"});
 
+var SFSchema = new mongoose.Schema({
+    gid   : String,
+    coords: []
+}, {collection: "sanfrancisco"});
+
 /* Model */
-var NYCModel     = mongoose.model("NYCModel"    , NYCSchema);
 var BostonModel  = mongoose.model("BostonModel" , BostonSchema);
 var ChicagoModel = mongoose.model("ChicagoModel", ChicagoSchema);
 var DCModel      = mongoose.model("DCModel"     , DCSchema);
 var LAModel      = mongoose.model("LAModel"     , LASchema);
 var LondonModel  = mongoose.model("LondonModel" , LondonSchema);
 var MiamiModel   = mongoose.model("MiamiModel"  , MiamiSchema);
+var NYCModel     = mongoose.model("NYCModel"    , NYCSchema);
 var ParisModel   = mongoose.model("ParisModel"  , ParisSchema);
 var SeattleModel = mongoose.model("SeattleModel", SeattleSchema);
+var SFModel      = mongoose.model("SFModel"     , SFSchema);
 
 /* ====================== */
 /* CITY COLLECTIONS : END */
@@ -129,15 +135,6 @@ app.get("/api", function(req, res)
 app.get("/api/author", function(req, res)
 {
     res.json(author);
-});
-
-/* Get the groups numbers for New York City. */
-app.get("/api/nyc/groups", function(req, res)
-{
-    NYCModel.find({}, {gid: 1}, function(err, data)
-    {
-        res.json(data);
-    });
 });
 
 /* Get the group numbers for Boston. */
@@ -194,6 +191,15 @@ app.get("/api/miami/groups", function(req, res)
     });
 });
 
+/* Get the groups numbers for New York City. */
+app.get("/api/nyc/groups", function(req, res)
+{
+    NYCModel.find({}, {gid: 1}, function(err, data)
+    {
+        res.json(data);
+    });
+});
+
 /* Get the group numbers for Paris. */
 app.get("/api/paris/groups", function(req, res)
 {
@@ -212,12 +218,12 @@ app.get("/api/seattle/groups", function(req, res)
     });
 });
 
-/* The set of co-ordinate pairs for the group - New York City. */
-app.get("/api/nyc/group/:gid/coords", function(req, res)
+/* Get the group numbers for San Francisco. */
+app.get("/api/sf/groups", function(req, res)
 {
-    NYCModel.find({gid: req.params.gid}, function(err, doc)
+    SFModel.find({}, {gid: 1}, function(err, data)
     {
-        res.json(doc);
+        res.json(data);
     });
 });
 
@@ -275,6 +281,15 @@ app.get("/api/miami/group/:gid/coords", function(req, res)
     });
 });
 
+/* The set of co-ordinate pairs for the group - New York City. */
+app.get("/api/nyc/group/:gid/coords", function(req, res)
+{
+    NYCModel.find({gid: req.params.gid}, function(err, doc)
+    {
+        res.json(doc);
+    });
+});
+
 /* The set of co-ordinate pairs for the group - Paris. */
 app.get("/api/paris/group/:gid/coords", function(req, res)
 {
@@ -288,6 +303,15 @@ app.get("/api/paris/group/:gid/coords", function(req, res)
 app.get("/api/seattle/group/:gid/coords", function(req, res)
 {
     SeattleModel.find({gid: req.params.gid}, function(err, doc)
+    {
+        res.json(doc);
+    });
+});
+
+/* The set of co-ordinate pairs for the group - San Francisco. */
+app.get("/api/sf/group/:gid/coords", function(req, res)
+{
+    SFModel.find({gid: req.params.gid}, function(err, doc)
     {
         res.json(doc);
     });

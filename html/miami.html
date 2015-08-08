@@ -10,10 +10,10 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Miami - Uber SPA</title>
-        <link rel="icon" href="image/icon3.png"/>
+        <link rel="icon" href="../image/icon3.png"/>
 
         <!-- Style sheets -->
-        <link rel="stylesheet" href="css/app.css"/>
+        <link rel="stylesheet" href="../css/app.css"/>
     </head>
     <!-- Head section : END -->
 
@@ -30,6 +30,7 @@
                         Credits
                         <img class="asCreditImg" src="image/none.jpg" id="as-credit"/>
                     </a -->
+                    <a class="asNavA" href="../index.html">Another city</a>
                 </header>
             </div>
             <input class="asMapInput" id="pac-input" type="text" placeholder="Search and zoom"/>
@@ -47,7 +48,7 @@
                         <option value="UberBLACK">UberBLACK</option>
                     </select>
                     <br/>
-                    <button class="asButton" ng-click="findUber()">Find</button><br/>
+                    <button class="asButton" ng-click="findUber(carType)">Find</button><br/>
                 </form>
 
                 <hr class="asHr" ng-show="primary"/>
@@ -85,7 +86,8 @@
                         <span class="asCarAttrSpan">Travel time: </span><span class="asCarValueSpan">{{primaryPrices[carType].duration}} seconds</span><br/>
                     </div>
 
-                    <hr class="asHr" ng-show="secondary"/>
+                    <hr class="asHr" ng-show="primary"/>
+                    <span class="asNoContentSpan" ng-show="primary && !secondary">No alternative</span>
 
                     <!-- Secondary options (vicinity) -->
                     <h2 class="asH2" ng-show="secondary">Cheaper locations</h2>
@@ -119,8 +121,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
         <!-- script src="https://code.angularjs.org/1.3.13/angular-route.min.js"></script -->
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;signed_in=true&amp;libraries=places"></script>
-        <script src="js/miami.js"></script>
-        <script src="js/service.js"></script>
+        <script src="../js/miami.js"></script>
+        <script src="../js/service.js"></script>
     </body>
     <!-- Body section : END -->
 </html>

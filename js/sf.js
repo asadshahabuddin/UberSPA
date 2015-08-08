@@ -1,6 +1,6 @@
 /*
     Author : Asad Shahabuddin
-    Created: May 21, 2015
+    Created: Aug 7, 2015
     Email  : shahabuddin.a@husky.neu.edu
 */
 
@@ -62,7 +62,7 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
 {
     echo("Inside the main controller");
     /* Constants */
-    RADIUS = 0.003;
+    RADIUS = 0.005;
 
     /* Scope variables */
     $scope.primary         = false;
@@ -239,7 +239,7 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
             });
             /* Calculate the group information and draw an overlay on the map. */
             $scope.orgnAddress = places[0].name;
-            $scope.group("nyc", orgnCoords.G, orgnCoords.K);
+            $scope.group("sf", orgnCoords.G, orgnCoords.K);
         });        
 
         /* Get the destination address' co-ordinates and group number. */
@@ -295,7 +295,7 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
         if(err)
         {
             // var content = "ERROR: The Geolocation service failed.";
-            var content = "The City of New York."
+            var content = "San Francisco Bay Area."
         }
         else
         {
@@ -305,7 +305,7 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
         var mapOptions = {
             content : content,
             map     : map,
-            position: new google.maps.LatLng(40.7962998, -73.9210438)
+            position: new google.maps.LatLng(37.5052154, -122.119408)
         };
         var infoWindow = new google.maps.InfoWindow(mapOptions);
         map.setCenter(mapOptions.position);
@@ -703,6 +703,6 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
 
     /* Main */
     google.maps.event.addDomListener(window, "load", initGoogleMaps);
-    createGroupMap("nyc");
+    createGroupMap("sf");
 });
-/* End of nyc.js */
+/* End of sf.js */
