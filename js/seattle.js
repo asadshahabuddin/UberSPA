@@ -69,7 +69,6 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
     $scope.secondary       = false;
     $scope.primaryPrices   = {};
     $scope.primaryTimes    = {};
-    $scope.secondaryOrgns  = {};
     $scope.secondaryPrices = {};
     $scope.secondaryTimes  = {};
 
@@ -90,6 +89,20 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
     var markers = [];
     var directionsDisplay;
     var directionsService;
+
+    /* Reset the scope variables. */
+    var resetScope = function()
+    {
+        $scope.primary         = false;
+        $scope.secondary       = false;
+        $scope.primaryPrices   = {};
+        $scope.primaryTimes    = {};
+        $scope.secondaryPrices = {};
+        $scope.secondaryTimes  = {};
+        groupId                = null;
+        groupCenter            = null;
+        altOrgns               = [];
+    };
 
     /* ============================= */
     /* GOOGLE MAPS FUNCTIONS : BEGIN */
@@ -624,6 +637,8 @@ app.controller("UberSPController", function(GlobalService, $scope, $q)
     /* Find all the Uber options from the source to the destination. */
     $scope.findUber = function(carType)
     {
+        /* Reset the scope variables. */
+        resetScope();
         /* Check if this function has been rightly called. */
         if(orgnAddrBox.getPlaces() === undefined ||
            destAddrBox.getPlaces() === undefined ||
